@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+      <audio autoplay></audio>
+    <div class="mt-auto">
+        <button type="button" class="btn btn-secondary" onclick="startRecording()">录制声纹</button>
+        <button type="button" class="btn btn-secondary" onclick="stopRecording()">停止录制</button>
+{#        <button type="button" class="btn btn-secondary" onclick="playRecording()">播放声纹</button>#}
+        <button type="button" class="btn btn-secondary" onclick="uploadAudio()">上传声纹</button>
+
+
+        <div id="recordingslist"></div>
+
+    </div>
+</body>
+{% block sb_admin_custom_js %}
+    <script src="{% static "js/HZRecorder.js" %}"></script>
+    <script>
+     var recorder;
+
+	var audio = document.querySelector('audio');
+
+	function startRecording() {
+
+	HZRecorder.get(function(rec) {
+
+	recorder = rec;
+
+	recorder.start();
+
+	}, {
+
+	sampleBits: 16,
+
+	sampleRate: 16000
+
+	});
+
+	}
+
+	function stopRecording() {
+
+	recorder.stop();
+
+	var blob = recorder.getBlob();
+
+	var url = URL.createObjectURL(blob);
+
+	var div = document.createElement('div');
+
+	var au = document.createElement('audio');
+
+	var hf = document.createElement('a');
+
+	au.controls = true;
+
+	au.src = url;
+
+	hf.href = url;
+
+	hf.download = "{{ request.session.user_name }}-"+new Date().toLocaleString('chinese',{hour12:false})+ '.wav';
+	{#console.log("{{ request.session.user_name }}");#}
+
+	hf.innerHTML = hf.download;
+
+	div.appendChild(au);
+
+	div.appendChild(hf);
+
+
+	recordingslist.appendChild(div);
+
+	}
+
+	function playRecording() {
+
+	recorder.play(audio);
+
+	}
+
+	function uploadAudio() {
+
+	recorder.upload("speech_save.py", function(state, e) {
+
+	switch(state) {
+
+	case 'uploading':
+
+	//var percentComplete = Math.round(e.loaded * 100 / e.total) + '%';
+
+	break;
+
+	case 'ok':
+
+	//alert(e.target.responseText);
+
+	alert("上传成功");
+
+	break;
+
+	case 'error':
+
+	alert("上传失败");
+
+	break;
+
+	case 'cancel':
+
+	alert("上传被取消");
+
+	break;
+
+	}
+
+	});
+
+	}
+    </script>
+{% endblock %}
+</html>

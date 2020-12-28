@@ -1,0 +1,25 @@
+{% extends "django_sb_admin/base.html" %}{% load static %}{% block sb_admin_title %}Blank page{% endblock sb_admin_title %}
+
+{% block sb_admin_breadcrumb_active %}<li class="breadcrumb-item active">
+      预加重
+ </li>{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_content %}
+<h3 class="text-center">预加重操作</h3>
+<hr>
+<p class="text-center">对录制的语音文件，进行预加重！</p>
+    <div class="col-lg-3 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 container col-center-block">
+        <div class="form-group " style="text-align: center">
+            <a class="btn btn-secondary btn-primary" style="width: auto" href="{% url "sb_admin_pre_emphasis" %}">预加重操作</a>
+        </div>
+    </div>
+    {% if pre_message %}
+            <div class="form-group" style="text-align: center">
+{#            {{ request.session.user_name }}#}
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/pre_emphasis1.png" %}">
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/pre_emphasis2.png" %}">
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/pre_emphasis3.png" %}">
+            </div>
+        {% endif %}
+
+
+{% endblock %}

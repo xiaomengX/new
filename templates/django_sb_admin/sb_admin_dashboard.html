@@ -1,0 +1,119 @@
+{% extends "django_sb_admin/base.html" %}{% load static %}{% block sb_admin_title %}Dashboard{% endblock sb_admin_title %}
+{% block sb_admin_subheading %}<small>Statistics Overview</small>{% endblock sb_admin_subheading %}
+{% block sb_admin_breadcrumb_active %}
+ <li class="breadcrumb-item active">
+      <i class="fa fa-bar-chart-o"></i> 录制声纹
+ </li>{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_content %}
+    <h4 class="text-center">录制&nbsp;&nbsp;声音</h4>
+<hr>
+<p class="text-center">点击下面的按钮，开始您的声音录制吧！ 录制时间为3秒钟，为了确保准确性，请录制不少于5段语音.</p>
+{#    <audio autoplay></audio>#}
+    <div class="col-lg-3 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 container col-center-block">
+        <div class="form-group " style="text-align: center">
+
+            <a class="btn btn-secondary btn-primary" style="width: auto" href="{% url "sb_admin_record" %}">录制声音</a>
+             <a class="btn btn-secondary btn-primary" style="width: auto" href="{% url "sb_admin_play" %}">播放音频</a>
+
+        </div>
+      <!--  <div class="form-group" style="text-align: center">
+            <a class="btn btn-secondary btn-primary" style="width: auto" href="{% url "sb_admin_play" %}">播放音频</a>
+        </div>-->
+    {% if record_message %}
+                <div class="alert alert-warning" style="padding: 0.75rem">{{ record_message }}</div>
+              {% endif %}
+
+    </div>
+     {% if message %}
+            <div class="form-group" style="text-align: center">
+{#            {{ request.session.user_name }}#}
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/play1.png" %}">
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/play2.png" %}">
+            <img class="img-thumbnail img-responsive center-block" style="width: 400px;height: 400px;" src="{% static "Image/play3.png" %}">
+            </div>
+        {% endif %}
+
+{% endblock sb_admin_content %}
+{% block sb_admin_custom_js %}
+    <!-- Morris Charts JavaScript -->
+    <script src="{% static "js/plugins/morris/raphael.min.js" %}"></script>
+    <script src="{% static "js/plugins/morris/morris.min.js" %}"></script>
+    <script src="{% static "js/plugins/morris/morris-data.js" %}"></script>
+    <!-- Flot Charts JavaScript -->
+    <!--[if lte IE 8]>
+    <script src="js/excanvas.min.js"></script><![endif]-->
+    <script src="{% static "js/plugins/flot/jquery.flot.js" %}"></script>
+    <script src="{% static "js/plugins/flot/jquery.flot.tooltip.min.js" %}"></script>
+    <script src="{% static "js/plugins/flot/jquery.flot.resize.js" %}"></script>
+    <script src="{% static "js/plugins/flot/jquery.flot.pie.js" %}"></script>
+{#    <script src="{% static "js/plugins/flot/flot-data.js" %}"></script>#}
+    <script src="{% static "js/HZRecorder.js" %}"></script>
+    <script>
+     var recorder;
+
+	var audio = document.querySelector('audio');
+
+	function startRecording() {
+
+	HZRecorder.get(function(rec) {
+
+	recorder = rec;
+
+	recorder.start();
+
+	}, {
+
+	sampleBits: 16,
+
+	sampleRate: 16000
+
+	});
+
+	}
+
+	function stopRecording() {
+
+	recorder.stop();
+
+	var blob = recorder.getBlob();
+
+	var url = URL.createObjectURL(blob);
+
+	var div = document.createElement('div');
+
+	var au = document.createElement('audio');
+
+	var hf = document.createElement('a');
+
+	au.controls = true;
+
+	au.src = url;
+
+	hf.href = url;
+
+	hf.download = "{{ request.session.user_name }}-"+new Date().toLocaleString('chinese',{hour12:false})+ '.wav';
+	{#console.log("{{ request.session.user_name }}");#}
+
+	hf.innerHTML = hf.download;
+
+	div.appendChild(au);
+
+	div.appendChild(hf);
+
+
+	recordingslist.appendChild(div);
+
+	}
+
+	function playRecording() {
+
+	recorder.play(audio);
+
+	}
+
+	function uploadAudio() {
+
+
+	}
+    </script>
+{% endblock sb_admin_custom_js %}

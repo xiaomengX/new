@@ -1,0 +1,74 @@
+{% extends "django_sb_admin/base.html" %}{% load static %}{% block sb_admin_title %}Tables{% endblock sb_admin_title %}{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
+
+ {% block sb_admin_breadcrumb_active %}
+ <li class="breadcrumb-item active">认证测试</li>
+ {% endblock sb_admin_breadcrumb_active %}
+ {% block sb_admin_content %}
+       <h3 class="text-center">认证测试</h3>
+    <hr>
+    <p class="text-center">点击下面的按钮开始认证您的个人身份！！</p>
+    <div class="col-lg-3 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 container col-center-block">
+         <div class="form-group" style="text-align: center">
+             <a class="btn btn-secondary btn-primary" style="width:auto" href="{% url "sb_admin_speech_record" %}">录制声纹</a>
+              <a class="btn btn-secondary btn-primary" style="width: auto" href="{% url "sb_admin_testing" %}">认证测试</a>
+
+        </div>
+      {% if message1 %}
+         <div class="form-group text-center" >
+             <div class="row text-center" style=" display: flex;align-items: center;justify-content: center;">
+            <div class="card text-white bg-primary o-hidden h-100" >
+              <div class="card-body ">
+                <div class="card-body-icon">
+                  <i class="fas fa-fw fa-comments"></i>
+                </div>
+                <div class="mr-5 text-center" style="margin-right: 0rem !important;">{{ request.session.user_name }}{{ message1}}</div>
+              </div>
+            </div>
+             </div>
+
+        </div>
+    {% endif %}
+    {% if message2 %}
+         <div class="form-group">
+             <div class="row text-center" style=" display: flex;align-items: center;justify-content: center;">
+            <div class="card text-white bg-danger o-hidden h-100" >
+              <div class="card-body">
+                <div class="card-body-icon">
+                  <i class="fas fa-fw fa-life-ring"></i>
+                </div>
+                <div class="mr-5 text-center" style="margin-right: 0rem !important;">{{ request.session.user_name }}{{ message2}}</div>
+              </div>
+            </div>
+             </div>
+
+        </div>
+    {% endif %}
+
+    {% if speech_recordmessage %}
+         <div class="form-group">
+             <div class="row text-center" style=" display: flex;align-items: center;justify-content: center;">
+            <div class="card text-white  bg-warning o-hidden h-100" >
+              <div class="card-body">
+                <div class="card-body-icon">
+                  <i class="fas fa-fw fa-list"></i>
+                </div>
+                <div class="mr-5 text-center" style="margin-right: 0rem !important;">{{ request.session.user_name }}{{ speech_recordmessage}}</div>
+              </div>
+            </div>
+             </div>
+        </div>
+    {% endif %}
+
+
+
+
+
+
+    </div>
+{% endblock sb_admin_content %}
+{% block sb_admin_custom_js %}
+  <script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
+  <script src="{% static "js/demo/chart-area-demo.js" %}"></script>
+  <script src="{% static "js/demo/chart-bar-demo.js" %}"></script>
+  <script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
+{% endblock sb_admin_custom_js %}

@@ -1,0 +1,71 @@
+{% extends "django_sb_admin/base.html" %}{% load static %}{% block sb_admin_title %}Charts{% endblock sb_admin_title %}
+{% block sb_admin_custom_css %}{% endblock sb_admin_custom_css %}
+{% block sb_admin_subheading %}{% endblock sb_admin_subheading %}
+{% block sb_admin_breadcrumb_active %}
+ <li class="breadcrumb-item active">
+      <i class="fa fa-bar-chart-o"></i>训练声纹
+ </li>
+{% endblock sb_admin_breadcrumb_active %}
+{% block sb_admin_content %}
+    <h3 class="text-center">声纹训练</h3>
+    <hr>
+    <p class="text-center">点击下面的按钮开始训练您的专属模板吧！！</p>
+    <div class="col-lg-3 col-lg-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 container col-center-block">
+         <div class="form-group" style="text-align: center">
+            <a class="btn btn-secondary btn-primary" style="width: auto" onclick="submit_query()" href="{% url "sb_admin_training" %}">训练声纹</a>
+        </div>
+        <div id="prog_out" class="progress progress-striped active">
+            <div id="prog_in" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            </div>
+        </div>
+        {% if message %}
+         <div class="form-group">
+             <div class="row">
+{#                 <div class="col-xl-3 col-sm-6 mb-3 center-block" style="width: auto" >#}
+            <div class="card text-white bg-primary o-hidden h-100" >
+              <div class="card-body">
+                <div class="card-body-icon">
+                  <i class="fas fa-fw fa-comments"></i>
+                </div>
+                <div class="mr-5 text-center" style="margin-right: 0px !important;">{{ request.session.user_name }}{{ message }}</div>
+              </div>
+              <a class="card-footer text-white clearfix small z-1" href="{% url "sb_admin_tables" %}">
+                <span class="float-left text-center">认证测试</span>
+                <span class="float-right">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+            </div>
+{#          </div>#}
+             </div>
+
+        </div>
+    {% endif %}
+    </div>
+
+{% endblock sb_admin_content %}
+
+{% block sb_admin_custom_js %}
+  <script src="{% static "vendor/chart.js/Chart.min.js" %}"></script>
+  <script src="{% static "js/demo/chart-area-demo.js" %}"></script>
+  <script src="{% static "js/demo/chart-bar-demo.js" %}"></script>
+  <script src="{% static "js/demo/chart-pie-demo.js" %}"></script>
+{% endblock sb_admin_custom_js %}
+<script type="text/javascript">
+    function submit_query(btn){
+    var sitv = setInterval(function(){
+        var prog_url = ...                   // prog_url指请求进度的url，后面会在django中设置
+        $.getJSON(prog_url, function(res){
+            $('#prog_in').width(res + '%');     // 改变进度条进度，注意这里是内层的div， res是后台返回的进度
+        });
+    }, 1000);                                 // 每1秒查询一次后台进度
+
+    var this_url = ...                        // 指当前页面的url
+    var yourjson = ...
+    $.getJSON(thisurl, yourjson, function(res){
+        // ...
+        clearInterval(sitv);                   // 此时请求成功返回结果了，结束对后台进度的查询
+        $('#prog_out').attr("class", "progress progress-bar-success"); // 修改进度条外层div的class, 改为完成形态
+    });
+}
+</script>
